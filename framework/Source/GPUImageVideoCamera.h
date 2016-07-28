@@ -22,7 +22,7 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
 
 /**
  A GPUImageOutput that provides frames from either camera
-*/
+ */
 @interface GPUImageVideoCamera : GPUImageOutput <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
 {
     NSUInteger numberOfFramesCaptured;
@@ -32,17 +32,20 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
     AVCaptureDevice *_inputCamera;
     AVCaptureDevice *_microphone;
     AVCaptureDeviceInput *videoInput;
-	AVCaptureVideoDataOutput *videoOutput;
-
+    AVCaptureVideoDataOutput *videoOutput;
+    
     BOOL capturePaused;
     GPUImageRotationMode outputRotation, internalRotation;
     dispatch_semaphore_t frameRenderingSemaphore;
-        
+    
     BOOL captureAsYUV;
     GLuint luminanceTexture, chrominanceTexture;
-
+    
     __unsafe_unretained id<GPUImageVideoCameraDelegate> _delegate;
 }
+
+@property(nonatomic, readwrite) AVCaptureDeviceInput *videoInput;
+@property(nonatomic, readwrite) AVCaptureVideoDataOutput *videoOutput;
 
 /// The AVCaptureSession used to capture from the camera
 @property(readonly, retain, nonatomic) AVCaptureSession *captureSession;
@@ -86,13 +89,13 @@ extern NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString
 - (id)initWithSessionPreset:(NSString *)sessionPreset cameraPosition:(AVCaptureDevicePosition)cameraPosition;
 
 /** Add audio capture to the session. Adding inputs and outputs freezes the capture session momentarily, so you
-    can use this method to add the audio inputs and outputs early, if you're going to set the audioEncodingTarget 
-    later. Returns YES is the audio inputs and outputs were added, or NO if they had already been added.
+ can use this method to add the audio inputs and outputs early, if you're going to set the audioEncodingTarget
+ later. Returns YES is the audio inputs and outputs were added, or NO if they had already been added.
  */
 - (BOOL)addAudioInputsAndOutputs;
 
 /** Remove the audio capture inputs and outputs from this session. Returns YES if the audio inputs and outputs
-    were removed, or NO is they hadn't already been added.
+ were removed, or NO is they hadn't already been added.
  */
 - (BOOL)removeAudioInputsAndOutputs;
 
